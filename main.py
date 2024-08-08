@@ -18,35 +18,49 @@ else:
 	raise OSError('Unsupported operating system')
 
 # User input the location zone (alphabet), location number digits (number) and the location number (number)
-location_zone = input("Enter the location zone (e.g., N): ").strip().upper()
 while True:
-	num_digits = input("Enter the number of digits for location number (e.g., 4): ").strip()
-	if re.fullmatch(r'\d', num_digits):
+	num_digits_zone = input("Enter the number of digits for location zone (e.g., 1): ").strip()
+	if re.fullmatch(r'\d', num_digits_zone):
 		break
 	else:
 		print("Invalid input. Please enter a single-digit number.")
-# Define the regex pattern for the specified number of digits
-pattern = rf'^\d{{{num_digits}}}$'
+# Define the regex pattern for the specified number of characters for location zone
+zone_pattern = rf'^.{{{num_digits_zone}}}$'
+# Get the location zone
+while True:
+	location_zone = input("Enter the location zone (e.g., N): ").strip().upper()
+	if re.fullmatch(zone_pattern, location_zone):
+		break
+	else:
+		print(f"Invalid input. Please enter a zone with exactly {num_digits_zone} digits.")
+while True:
+	num_digits_number = input("Enter the number of digits for location number (e.g., 4): ").strip()
+	if re.fullmatch(r'\d', num_digits_number):
+		break
+	else:
+		print("Invalid input. Please enter a single-digit number.")
+# Define the regex pattern for the specified number of digits for location number
+number_pattern = rf'^\d{{{num_digits_number}}}$'
 # Get the start location number
 while True:
 	location_number_start = input("Enter the start of location number: ").strip()
-	if re.fullmatch(pattern, location_number_start):
+	if re.fullmatch(number_pattern, location_number_start):
 		location_number_start = int(location_number_start)
 		break
 	else:
-		print(f"Invalid input. Please enter a number with exactly {num_digits} digits.")
+		print(f"Invalid input. Please enter a number with exactly {num_digits_number} digits.")
 # Get the end location number
 while True:
 	location_number_end = input("Enter the end of location number: ").strip()
-	if re.fullmatch(pattern, location_number_end):
+	if re.fullmatch(number_pattern, location_number_end):
 		location_number_end = int(location_number_end)
 		break
 	else:
-		print(f"Invalid input. Please enter a number with exactly {num_digits} digits.")
+		print(f"Invalid input. Please enter a number with exactly {num_digits_number} digits.")
 # Loop through the location number range, concatenate the location zone and each location number
 for location_number in range(location_number_start, location_number_end + 1):
 	# Concatenate the location zone and location number
-	barcode_param = f'{location_zone}{location_number:0{num_digits}d}'
+	barcode_param = f'{location_zone}{location_number:0{num_digits_number}d}'
 	# Set barcode text to the same value as the barcode parameter
 	barcode_text = barcode_param
 	# Original barcode image
